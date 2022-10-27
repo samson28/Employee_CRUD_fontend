@@ -1,3 +1,4 @@
+import 'package:employee_crud_fontend/screen/login.dart';
 import 'package:employee_crud_fontend/screen/my_home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -5,10 +6,7 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(
-            builder: (context) => const MyHomePage(
-                  title: 'Home',
-                ));
+        return MaterialPageRoute(builder: (context) => const Login());
 
       default:
         return MaterialPageRoute(

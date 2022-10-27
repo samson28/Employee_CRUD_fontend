@@ -1,7 +1,9 @@
+import 'package:employee_crud_fontend/provider/hive_provider.dart';
 import 'package:employee_crud_fontend/utilities/route.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  HiveProvider.init();
   runApp(const MyApp());
 }
 
