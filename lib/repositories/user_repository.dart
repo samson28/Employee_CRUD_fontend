@@ -20,13 +20,8 @@ class UserRepo {
 
   register(User user) async {
     var url = Uri.parse(uri + UserUrl().registerUrl());
-    var response = await http.post(url, body: {
-      'name': user.name,
-      'email': user.email,
-      'password': user.password
-    }, headers: {
-      'Accept': 'application/json'
-    });
+    var response = await http.post(url,
+        body: user.toJson(), headers: {'Accept': 'application/json'});
     final jsonData = jsonDecode(response.body);
     return jsonData;
   }
@@ -38,7 +33,8 @@ class UserRepo {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-    return response.body;
+    final jsonData = jsonDecode(response.body);
+    return jsonData;
   }
 
   current() async {
@@ -48,7 +44,8 @@ class UserRepo {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-    return response.body;
+    final jsonData = jsonDecode(response.body);
+    return jsonData;
   }
 
   refresh() async {
@@ -58,6 +55,7 @@ class UserRepo {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-    return response.body;
+    final jsonData = jsonDecode(response.body);
+    return jsonData;
   }
 }

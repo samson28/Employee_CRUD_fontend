@@ -1,9 +1,10 @@
 class Employe {
+  late int id;
   final String nom;
   final String prenom;
   final String sex;
   final DateTime dateDeNaissance;
-  final String tel;
+  final int tel;
   final String mail;
   final DateTime dateDePriseDeFonction;
   final String fonction;
@@ -16,7 +17,8 @@ class Employe {
       required this.tel,
       required this.mail,
       required this.dateDePriseDeFonction,
-      required this.fonction});
+      required this.fonction,
+      id});
 
   Employe.fromJson(Map<String, dynamic> json)
       : this(
@@ -24,7 +26,7 @@ class Employe {
           prenom: json['prenom'].toString(),
           sex: json['sex'].toString(),
           dateDeNaissance: DateTime.parse(json['dateDeNaissance'].toString()),
-          tel: json['tel'].toString(),
+          tel: json['tel'],
           mail: json['mail'].toString(),
           dateDePriseDeFonction:
               DateTime.parse(json['dateDePriseDeFonction'].toString()),
