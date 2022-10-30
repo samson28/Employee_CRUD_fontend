@@ -1,25 +1,33 @@
+import 'package:employee_crud_fontend/model/user.dart';
 import 'package:employee_crud_fontend/repository/user_repository.dart';
 import 'package:employee_crud_fontend/screen/employe_list.dart';
-import 'package:employee_crud_fontend/screen/register.dart';
+import 'package:employee_crud_fontend/screen/login.dart';
 import 'package:flutter/material.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
-  final loginFormkey = GlobalKey<FormState>();
+class _RegisterState extends State<Register> {
+  final registerFormkey = GlobalKey<FormState>();
+
+  final _name = TextEditingController();
+
   final _email = TextEditingController();
 
   final _password = TextEditingController();
+
+  final _confirmpassword = TextEditingController();
 
   @override
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _confirmpassword.dispose();
+    _name.dispose();
     super.dispose();
   }
 
@@ -33,14 +41,20 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> login() async {
+    register() async {
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) => const Center(
                 child: CircularProgressIndicator(),
               ));
-      var x = await UserRepo().login(_email.value.text, _password.value.text);
+
+      var x = await UserRepo().register(
+        User(
+            name: _name.value.text,
+            email: _email.value.text,
+            password: _password.value.text),
+      );
       if (x == 'success') {
         home();
       }
@@ -51,17 +65,33 @@ class _LoginState extends State<Login> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
-            key: loginFormkey,
+            key: registerFormkey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const Icon(
-                  Icons.access_alarm,
-                  size: 100,
+                const Text(
+                  "Create an account.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 25),
                 ),
                 const SizedBox(
                   height: 35,
+                ),
+                TextFormField(
+                    controller: _name,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Username',
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a Username';
+                      }
+                      return null;
+                    }),
+                const SizedBox(
+                  height: 15,
                 ),
                 TextFormField(
                     controller: _email,
@@ -71,7 +101,7 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Please enter you E-mail';
+                        return 'Please enter a E-mail';
                       }
                       return null;
                     }),
@@ -94,10 +124,28 @@ class _LoginState extends State<Login> {
                 const SizedBox(
                   height: 15,
                 ),
+                TextFormField(
+                    controller: _confirmpassword,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Confirm Password',
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please confirm your Password';
+                      }
+                      return null;
+                    }),
+                const SizedBox(
+                  height: 15,
+                ),
                 GestureDetector(
                   onTap: () {
-                    if (loginFormkey.currentState!.validate()) {
-                      login();
+                    if (registerFormkey.currentState!.validate()) {
+                      if (_confirmpassword.value.text == _password.value.text) {
+                        register();
+                      }
                     }
                   },
                   child: Container(
@@ -109,7 +157,7 @@ class _LoginState extends State<Login> {
                       color: Colors.lightBlue[500],
                     ),
                     child: const Center(
-                      child: Text('Log In'),
+                      child: Text('Sign Up'),
                     ),
                   ),
                 ),
@@ -121,11 +169,13 @@ class _LoginState extends State<Login> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const Register()),
+                            builder: (BuildContext context) => const Login()),
                         (route) => false);
                   },
-                  child: const Text("You Don't Have Any Account ?"),
+                  child: const Text(
+                    "You already have an acount ? Login here .",
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
               ],
             ),

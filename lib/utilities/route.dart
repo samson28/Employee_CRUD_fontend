@@ -1,5 +1,6 @@
+import 'package:employee_crud_fontend/screen/employe_list.dart';
 import 'package:employee_crud_fontend/screen/login.dart';
-import 'package:employee_crud_fontend/screen/my_home_page.dart';
+import 'package:employee_crud_fontend/screen/register.dart';
 import 'package:flutter/material.dart';
 
 class RouteGenerator {
@@ -7,6 +8,10 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (context) => const Login());
+      case '/register':
+        return MaterialPageRoute(builder: (context) => const Register());
+      case '/home':
+        return MaterialPageRoute(builder: (context) => const EmployeList());
 
       default:
         return MaterialPageRoute(
