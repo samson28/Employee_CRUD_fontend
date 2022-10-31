@@ -1,4 +1,4 @@
-const String uri = "http://localhost:8000/api/";
+const String uri = "http://192.168.1.68:8000/api/";
 
 class UserUrl {
   String loginUrl() => "login";

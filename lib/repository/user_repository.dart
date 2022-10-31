@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:employee_crud_fontend/model/user.dart';
 import 'package:employee_crud_fontend/provider/hive_provider.dart';
 import 'package:employee_crud_fontend/utilities/urls.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -14,18 +13,16 @@ class UserRepo {
         body: {'email': email, 'password': password},
         headers: {'Accept': 'application/json'});
     Map<String, dynamic> jsonData = jsonDecode(response.body);
-    if (kDebugMode) {
-      print(jsonData);
-    }
+
     if (jsonData['status'] == 'success') {
       String x = jsonData['access_token'];
       HiveProvider.box.put('token', x);
       return 'success';
     } else {
-      if (kDebugMode) {
-        print('error');
+      if (jsonData['message'] == 'Unauthorized') {
+        return 'Identifiants Incorrectes';
       }
-      return 'error';
+      return jsonData['message'];
     }
   }
 
@@ -34,14 +31,12 @@ class UserRepo {
     var response = await http.post(url,
         body: user.toJson(), headers: {'Accept': 'application/json'});
     Map<String, dynamic> jsonData = jsonDecode(response.body);
-    if (kDebugMode) {
-      print(jsonData);
-    }
+
     if (jsonData['status'] == 'success') {
       HiveProvider.box.put('token', jsonData['authorisation']['access_token']);
       return 'success';
     } else {
-      return 'error';
+      return jsonData['message'];
     }
   }
 
