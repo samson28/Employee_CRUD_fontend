@@ -18,6 +18,8 @@ class UserRepo {
       print(jsonData);
     }
     if (jsonData['status'] == 'success') {
+      String x = jsonData['access_token'];
+      HiveProvider.box.put('token', x);
       return 'success';
     } else {
       if (kDebugMode) {
@@ -36,7 +38,7 @@ class UserRepo {
       print(jsonData);
     }
     if (jsonData['status'] == 'success') {
-      HiveProvider.box.put('token', jsonData['authorisation']['access-token']);
+      HiveProvider.box.put('token', jsonData['authorisation']['access_token']);
       return 'success';
     } else {
       return 'error';
@@ -51,6 +53,7 @@ class UserRepo {
       'Authorization': 'Bearer $token'
     });
     final jsonData = jsonDecode(response.body);
+    print(jsonData);
     return jsonData;
   }
 

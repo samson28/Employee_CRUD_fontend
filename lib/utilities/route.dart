@@ -1,3 +1,4 @@
+import 'package:employee_crud_fontend/screen/employe_form_screen.dart';
 import 'package:employee_crud_fontend/screen/employe_list.dart';
 import 'package:employee_crud_fontend/screen/login.dart';
 import 'package:employee_crud_fontend/screen/register.dart';
@@ -12,6 +13,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => const Register());
       case '/home':
         return MaterialPageRoute(builder: (context) => const EmployeList());
+      case '/addEmp':
+        return MaterialPageRoute(
+            builder: (context) => const EmployeFormScreen());
 
       default:
         return MaterialPageRoute(

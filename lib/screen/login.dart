@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 const Icon(
-                  Icons.access_alarm,
+                  Icons.login_sharp,
                   size: 100,
                 ),
                 const SizedBox(

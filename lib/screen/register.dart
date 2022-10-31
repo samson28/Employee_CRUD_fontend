@@ -71,7 +71,7 @@ class _RegisterState extends State<Register> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 const Text(
-                  "Create an account.",
+                  "Créer un compte.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 25),
                 ),

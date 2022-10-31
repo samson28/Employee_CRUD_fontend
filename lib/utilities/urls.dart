@@ -11,8 +11,8 @@ class UserUrl {
 class EmployeUrl {
   String getUrl() => "employe/all";
   String addUrl() => "employe/store";
-  String getOneUrl(id) => "employe/show/{$id}";
-  String updateUrl(id) => "employe/update/{$id}";
-  String deleteUrl(id) => "employe/delete/{$id}";
+  String getOneUrl(id) => "employe/show/$id";
+  String updateUrl(id) => "employe/update/$id";
+  String deleteUrl(id) => "employe/delete/$id";
   String searchUrl() => "employe/search";
 }

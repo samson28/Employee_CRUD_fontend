@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:employee_crud_fontend/model/employee.dart';
 import 'package:employee_crud_fontend/provider/hive_provider.dart';
 import 'package:employee_crud_fontend/utilities/urls.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class EmployeRepo {
@@ -10,14 +11,15 @@ class EmployeRepo {
     var url = Uri.parse(uri + EmployeUrl().addUrl());
     var token = HiveProvider.box.get('token');
     var response = await http.post(url, body: employe.toJson(), headers: {
-      'Accept': 'application/json',
+      'Accept': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token'
     });
     final jsonData = jsonDecode(response.body);
+    print(jsonData);
     return jsonData;
   }
 
-  getEmploye(Employe employe) async {
+  getEmploye() async {
     var url = Uri.parse(uri + EmployeUrl().getUrl());
     var token = HiveProvider.box.get('token');
     var response = await http.get(url, headers: {
@@ -25,6 +27,9 @@ class EmployeRepo {
       'Authorization': 'Bearer $token'
     });
     Map<String, dynamic> jsonData = jsonDecode(response.body);
+    if (kDebugMode) {
+      print(jsonData);
+    }
 
     var list = jsonData['employes'] as List;
     List<Employe> listDesEmploye =
@@ -65,11 +70,14 @@ class EmployeRepo {
   updateEmploye(Employe employe) async {
     var url = Uri.parse(uri + EmployeUrl().updateUrl(employe.id));
     var token = HiveProvider.box.get('token');
-    var response = await http.put(url, body: employe.toJson(), headers: {
+    var response = await http.post(url, body: employe.toJson(), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
     final jsonData = jsonDecode(response.body);
+    if (kDebugMode) {
+      print(jsonData);
+    }
     return jsonData;
   }
 
@@ -81,6 +89,9 @@ class EmployeRepo {
       'Authorization': 'Bearer $token'
     });
     final jsonData = jsonDecode(response.body);
+    if (kDebugMode) {
+      print(jsonData);
+    }
     return jsonData;
   }
 }

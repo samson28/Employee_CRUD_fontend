@@ -1,36 +1,33 @@
 class Employe {
-  late int id;
+  final int id;
   final String nom;
   final String prenom;
   final String sex;
-  final DateTime dateDeNaissance;
+  final int age;
   final int tel;
   final String mail;
-  final DateTime dateDePriseDeFonction;
   final String fonction;
 
   Employe(
       {required this.nom,
       required this.prenom,
       required this.sex,
-      required this.dateDeNaissance,
+      required this.age,
       required this.tel,
       required this.mail,
-      required this.dateDePriseDeFonction,
       required this.fonction,
-      id});
+      required this.id});
 
   Employe.fromJson(Map<String, dynamic> json)
       : this(
-          nom: json['nam'].toString(),
+          nom: json['nom'].toString(),
           prenom: json['prenom'].toString(),
           sex: json['sex'].toString(),
-          dateDeNaissance: DateTime.parse(json['dateDeNaissance'].toString()),
+          age: json['age'],
           tel: json['tel'],
           mail: json['mail'].toString(),
-          dateDePriseDeFonction:
-              DateTime.parse(json['dateDePriseDeFonction'].toString()),
           fonction: json['fonction'].toString(),
+          id: json['id'],
         );
 
   Map<String, dynamic> toJson() {
@@ -38,10 +35,9 @@ class Employe {
       'nom': nom,
       'prenom': prenom,
       'sex': sex,
-      'date_de_naissance': dateDeNaissance,
-      'tel': tel,
+      'age': age.toString(),
+      'tel': tel.toString(),
       'mail': mail,
-      'date_de_prise_de_fonction': dateDePriseDeFonction,
       'fonction': fonction,
     };
   }
