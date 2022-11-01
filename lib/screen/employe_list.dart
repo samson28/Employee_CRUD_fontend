@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:employee_crud_fontend/model/employee.dart';
 import 'package:employee_crud_fontend/repository/employee_repository.dart';
 import 'package:employee_crud_fontend/repository/user_repository.dart';
@@ -14,14 +16,60 @@ class EmployeList extends StatefulWidget {
 
 class _EmployeListState extends State<EmployeList> {
   List<Employe> employes = [];
+  final searchController = TextEditingController();
+  bool isLoading = false;
+  bool isEmptyResponse = true;
+  bool hasResponded = false;
+  bool isResponseForDestination = false;
+  Timer? searchOnStoppedTyping;
 
   @override
   void initState() {
-    getEmp();
+    _getEmp();
     super.initState();
   }
 
-  getEmp() async {
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  // Future.delayed(
+  //   const Duration(milliseconds: 500),
+  //   () => setState(() {
+  //     isLoading = false;
+  //   }),
+  // );
+
+  _onChange(value) {
+    setState(() {
+      isLoading = true;
+    });
+
+    if (searchOnStoppedTyping != null) {
+      setState(() => searchOnStoppedTyping?.cancel());
+    }
+    if (searchController.value.text != '') {
+      setState(() => searchOnStoppedTyping =
+          Timer(const Duration(seconds: 1), () => _rechercher(value)));
+    } else {
+      _getEmp();
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  _rechercher(String value) async {
+    List<Employe> list = await EmployeRepo().shearchEmploye(value);
+    setState(() {
+      employes = list;
+      isLoading = false;
+    });
+  }
+
+  _getEmp() async {
     List<Employe> x = await EmployeRepo().getEmploye();
     setState(() {
       employes = x;
@@ -50,25 +98,54 @@ class _EmployeListState extends State<EmployeList> {
               icon: const Icon(Icons.logout))
         ],
       ),
-      body: ListView.builder(
-        itemCount: employes.length,
-        itemBuilder: (context, index) {
-          final employe = employes[index];
-          return Dismissible(
-              key: Key(employe.id.toString()),
-              onDismissed: (direction) {
-                setState(() {
-                  delEmp(employe);
-                  employes.remove(employe);
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("${employe.nom} supprimé")));
-              },
-              background: Container(color: Colors.red),
-              child: EmployeItemWidget(
-                employe: employe,
-              ));
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+            child: TextField(
+                controller: searchController,
+                onChanged: _onChange,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none),
+                    hintText: 'Search',
+                    filled: true,
+                    prefixIcon: const Icon(Icons.search),
+                    fillColor: Colors.grey)),
+          ),
+          isLoading
+              ? const LinearProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+              : Container(),
+          Expanded(
+            child: employes.isEmpty
+                ? const Center(
+                    child: Text("Aucun Employé trouvé"),
+                  )
+                : ListView.builder(
+                    itemCount: employes.length,
+                    itemBuilder: (context, index) {
+                      final employe = employes[index];
+                      return Dismissible(
+                          key: Key(employe.id.toString()),
+                          onDismissed: (direction) {
+                            setState(() {
+                              delEmp(employe);
+                              employes.remove(employe);
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("${employe.nom} supprimé")));
+                          },
+                          background: Container(color: Colors.red),
+                          child: EmployeItemWidget(
+                            employe: employe,
+                          ));
+                    },
+                  ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/addEmp'),
@@ -77,3 +154,4 @@ class _EmployeListState extends State<EmployeList> {
     );
   }
 }
+//const BorderRadius.all(Radius.circular(5));
